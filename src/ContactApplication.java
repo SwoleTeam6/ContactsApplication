@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ContactApplication {
@@ -53,8 +54,8 @@ public class ContactApplication {
         return new Contact(parts[0], parts[1]);
     }
 
-    public static String toLine(Contact contract){
-        return String.format("%s|%s", contract.getName(), contract.getNumber());
+    public static String toLine(Contact contact){
+        return String.format("%s|%s", contact.getName(), contact.getNumber());
     }
 
     public static void writeToFile(List<Contact> contacts){
@@ -69,6 +70,15 @@ public class ContactApplication {
         List<String> lines = displayOutput(contactsFile);
         List<Contact> contacts = new ArrayList<>();
         for (String line : lines){
+            contacts.add(splitLine(line));
+        }
+        return contacts;
+    }
+
+    public static List<Contact> convertStringToContactObj(List<String> strings){
+
+        List<Contact> contacts = new ArrayList<>();
+        for (String line : strings){
             contacts.add(splitLine(line));
         }
         return contacts;
@@ -100,18 +110,31 @@ public class ContactApplication {
         add(new Contact(enterName, enterNumber));
     }
 
-    public static void remove(Contact contact){
-        List<Contact> contacts = all();
-        contacts.remove(contact);
-        writeToFile(contacts);
+    public static void remove(String name){
+
+        Path pathToFile = Paths.get("src/contacts.txt");
+        List<String> contacts = new ArrayList<>();
+        try {
+            contacts = Files.readAllLines(pathToFile);
+        } catch (IOException iox){
+            iox.printStackTrace();
+        }
+        Iterator<String> contactIterator = contacts.iterator();
+        while (contactIterator.hasNext()){
+            String item = contactIterator.next();
+            if(item.startsWith(name)){
+                contactIterator.remove();
+            }
+        }
+
+        List<Contact> contactObjs = convertStringToContactObj(contacts);
+        writeToFile(contactObjs);
     }
 
     public static void removeContact(){
         String userEnter = Input.getString("Name of contact to be remove?");
-        List<Contact> results = search(userEnter);
-        for(Contact contact : results){
-            remove(contact);
-        }
+            remove(userEnter);
+
     }
 
     public static void showContacts(List<Contact> contacts){
@@ -147,16 +170,16 @@ public class ContactApplication {
         } else if (userEnter == 2) {
             addContact();
             System.out.println("Contact added!");
+            viewAllContacts();
         } else if (userEnter == 3) {
             searchContacts();
         } else if (userEnter == 4) {
             removeContact();
             System.out.println("Contact removed!");
+            viewAllContacts();
         } else {
             System.out.println("Good Bye");
         }
 
     }
-
-
 }
