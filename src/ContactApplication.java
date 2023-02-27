@@ -158,27 +158,30 @@ public class ContactApplication {
 
     public static void main(String[] args) {
 
-        System.out.println("""
-                1. View contacts.
-                2. Add a new contact.
-                3. Search a contact by name.
-                4. Delete an existing contact.
-                5. Exit.""");
-        int userEnter = Input.getInt();
-        if(userEnter == 1){
-            viewAllContacts();
-        } else if (userEnter == 2) {
-            addContact();
-            System.out.println("Contact added!");
-            viewAllContacts();
-        } else if (userEnter == 3) {
-            searchContacts();
-        } else if (userEnter == 4) {
-            removeContact();
-            System.out.println("Contact removed!");
-            viewAllContacts();
-        } else {
-            System.out.println("Good Bye");
+        while(true) {
+            System.out.println("""
+                    1. View contacts.
+                    2. Add a new contact.
+                    3. Search a contact by name.
+                    4. Delete an existing contact.
+                    5. Exit.""");
+            int userEnter = Input.getInt();
+            if (userEnter == 1) {
+                viewAllContacts();
+            } else if (userEnter == 2) {
+                addContact();
+                System.out.println("Contact added!");
+                viewAllContacts();
+            } else if (userEnter == 3) {
+                searchContacts();
+            } else if (userEnter == 4) {
+                removeContact();
+                System.out.println("Contact removed!");
+                viewAllContacts();
+            } else {
+                System.out.println("Good Bye");
+                return;
+            }
         }
 
     }
