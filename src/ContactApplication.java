@@ -48,16 +48,18 @@ public class ContactApplication {
             return new ArrayList<>();
         }
     }
-
+    // split string into array, so we can convert to Contact object
     public static Contact splitLine(String line){
         String[] parts = line.split("\\|");
         return new Contact(parts[0], parts[1]);
     }
 
+    // format how contact is add to .txt file
     public static String toLine(Contact contact){
         return String.format("%s|%s", contact.getName(), contact.getNumber());
     }
 
+    // append to .txt file
     public static void writeToFile(List<Contact> contacts){
         List<String> lines = new ArrayList<>();
         for (Contact contact : contacts){
